@@ -36,15 +36,18 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         table = self.browser.find_element(By.ID, "id_list_table")
-        
-        rows = table.find_elements(By.TAG_NAME, "tr")
-        self.assertTrue(
-                any(row.text == "1: buy apples" for row in rows),
-                "New to-do item did not appear in table",
-        )
 
+        rows = table.find_elements(By.TAG_NAME, "tr")
+        self.assertIn( "1: buy apples",
+                      [row.text for row in rows],
+        )
+        
 # There is still a text box invitig him to add another item.
 # He enters "buy watermelons"
+        self.assertIn("2: buy watermelons",
+                      [row.text for row in rows],
+        )
+
         self.fail("Finish the test!")
 # The page updates again, and now shows both items on him list
 
