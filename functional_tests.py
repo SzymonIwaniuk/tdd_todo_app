@@ -9,14 +9,17 @@ class NewVisitorTest(unittest.TestCase):
         self.browser = webdriver.Firefox()
     
 
+
     def tearDown(self):
         self.browser.quit()
         
+
     def check_for_row_in_list_table(self, row_text):
         table = self.browser.find_element(By.ID, "id_list_table")
         rows = table.find_elements(By.TAG_NAME, "tr")
         self.assertIn(row_text, [row.text for row in rows])
                     
+
     def test_can_start_a_todo_list(self):
 # User has heard about a cooool new online to-do app.
 # and decicde to check out its homepage
@@ -39,16 +42,19 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
 
         time.sleep(1)
-        self.check_for_row_in_list_table("1: buy apples") 
+        self.check_for_row_in_list_table("1: buy apples")
+
 # There is still a text box invitig him to add another item.
 # He enters "buy watermelons"
         inputbox = self.browser.find_element(By.ID, "id_new_item")
         inputbox.send_keys("buy watermelons")
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
+
 # The page updates again, and now shows both items on him list
         self.check_for_row_in_list_table("1: buy apples")
         self.check_for_row_in_list_table("2: buy watermelons")
+
 # Satisfied, he goes back to lifting
 
 if __name__ == '__main__':
