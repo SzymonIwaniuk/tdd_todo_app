@@ -22,17 +22,22 @@ class HomePageTest(TestCase):
 
 class ListViewTest(TestCase):
     def test_uses_list_template(self):
-        response = self.client.get("/lists/the-only-list-in-the-world/")
+        mylist = List.objects.create()
+        response = self.client.get(f"/lists/{mylist.id}/")
         self.assertTemplateUsed(response, "list.html")
 
-    def test_displays_all_list_items(self):
-        mylist = List.objects.create()
-        Item.objects.create(text="itemey 1", list=mylist)
-        Item.objects.create(text="itemey 2", list=mylist)
-        response = self.client.get("/lists/the-only-list-in-the-world/")
+    def test_displays_only_items_for_that_list(self):
+        correct_list = List.objects.create()
+        Item.objects.create(text="itemey 1", list=correct_list)
+        Item.objects.create(text="itemey 2", list=correct_list)
+        other_list = List.objects.create()
+        Item.objects.create(text="other list item", list = other_list)
+
+        response = self.client.get(f"/lists/{correct_list.id}/")
+
         self.assertContains(response, "itemey 1")
         self.assertContains(response, "itemey 2")
-
+        self.assertNotContains(response, "other_list_item")
 
 class ListAndItemModelTest(TestCase):
     def test_saving_and_retrievig_items(self):
@@ -72,6 +77,7 @@ class NewListTest(TestCase):
 
     def test_redirects_after_POST(self):
         response = self.client.post("/lists/new", data={"item_text": "A new list item"})
-        self.assertRedirects(response, "/lists/the-only-list-in-the-world/")
+        new_list = List.objects.get()
+        self.assertRedirects(response, f"/lists/{new_list.id}/")
 
     
