@@ -69,14 +69,14 @@ class NewVisitorTest(LiveServerTestCase):
         # Satisfied, he goes back to lifting
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
-        #User starts a new to-do list
+        # User starts a new to-do list
         self.browser.get(self.live_server_url)
         inputbox = self.browser.find_element(By.ID, "id_new_item")
         inputbox.send_keys("buy apples")
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: buy apples")
 
-        #She noticed that her list has a unique URL
+        # She noticed that her list has a unique URL
         edith_list_url = self.browser.current_url
 
         self.assertRegex(edith_list_url, "/lists/.+")
@@ -112,6 +112,3 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn("Buy milk", page_text)
 
         # Satisfied, they both go back to sleep
-
-
-
