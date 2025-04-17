@@ -6,3 +6,4 @@ __pycache__
 *.epub
 /static
 src/db.sqlite3
+src/static
