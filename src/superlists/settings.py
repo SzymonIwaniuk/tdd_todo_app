@@ -25,7 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-vs-d==fz5x1fp_f1!3o^kzpzr_f0&0b&9m=w$rc3nj4_+q^)4q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 if 'DJANGO_DEBUG_FALSE' in os.environ:
     DEBUG = False
@@ -132,3 +131,14 @@ STATIC_ROOT = BASE_DIR / 'static'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "root": {"handlers": ["console"], "level": "INFO"},
+    },
+}
