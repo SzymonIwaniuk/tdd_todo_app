@@ -7,3 +7,5 @@ __pycache__
 /static
 src/db.sqlite3
 src/static
+infra/inventory.ini
+*.pem
