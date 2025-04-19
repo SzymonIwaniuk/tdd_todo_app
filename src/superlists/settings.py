@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-vs-d==fz5x1fp_f1!3o^kzpzr_f0&0b&9m=w$rc3nj4_+q^)4q
 if 'DJANGO_DEBUG_FALSE' in os.environ:
     DEBUG = False
     SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-    ALLOWED_HOSTS = [os.environ['DJANGO_ALLOWED_HOST']]
+    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOST', '').split(',')
 else:
     DEBUG = True
     SECRET_KEY = 'insecure-key-for-dev'
