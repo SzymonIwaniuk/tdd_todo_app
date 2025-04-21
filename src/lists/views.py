@@ -4,7 +4,6 @@ from lists.forms import ItemForm
 from lists.models import Item, List
 from django.core.exceptions import ValidationError
 
-
 # Create your views here.
 def home_page(request):
     return render(request, "home.html", {"form": ItemForm()})
@@ -16,7 +15,7 @@ def view_list(request, list_id):
 
     if request.method == "POST":
         try:
-            item = Item(text=request.POST["item_text"], list=our_list)
+            item = Item(text=request.POST["text"], list=our_list)
             item.full_clean()
             item.save()
             return redirect(our_list)
@@ -28,7 +27,7 @@ def view_list(request, list_id):
 
 def new_list(request):
     nulist = List.objects.create()
-    item = Item(text=request.POST["item_text"], list=nulist)
+    item = Item(text=request.POST["text"], list=nulist)
 
     try:
         item.full_clean()

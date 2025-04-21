@@ -7,7 +7,7 @@ from .base import FunctionalTest
 class ItemValidationTest(FunctionalTest):
     def test_cannot_add_empty_list_items(self):
         self.browser.get(self.live_server_url)
-        self.browser.find_element(By.ID, "id_new_item").send_keys(Keys.ENTER)
+        self.get_item_input_box().send_keys(Keys.ENTER)
 
         self.wait_for(
             lambda: self.assertEqual(
@@ -16,12 +16,12 @@ class ItemValidationTest(FunctionalTest):
             )
         )
 
-        self.browser.find_element(By.ID, "id_new_item").send_keys("Purchase milk")
-        self.browser.find_element(By.ID, "id_new_item").send_keys(Keys.ENTER)
+        self.get_item_input_box().send_keys("Purchase milk")
+        self.get_item_input_box().send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: Purchase milk")
 
 
-        self.browser.find_element(By.ID, "id_new_item").send_keys(Keys.ENTER)
+        self.get_item_input_box().send_keys(Keys.ENTER)
 
         self.wait_for(
             lambda: self.assertEqual(
@@ -30,6 +30,6 @@ class ItemValidationTest(FunctionalTest):
             )
         )
 
-        self.browser.find_element(By.ID, "id_new_item").send_keys("Make tea")
-        self.browser.find_element(By.ID, "id_new_item").send_keys(Keys.ENTER)
+        self.get_item_input_box().send_keys("Make tea")
+        self.get_item_input_box().send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("2: Make tea")
