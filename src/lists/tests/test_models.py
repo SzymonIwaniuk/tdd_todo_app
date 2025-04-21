@@ -3,6 +3,7 @@ from lists.models import Item, List
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 
+
 # Create your tests here.
 class ListAndItemModelsTest(TestCase):
     def test_saving_and_retrievig_items(self):
@@ -38,10 +39,12 @@ class ListAndItemModelsTest(TestCase):
         with self.assertRaises(IntegrityError):
             item.save()
 
-
-
     def test_cannot_save_empty_list_items(self):
         mylist = List.objects.create()
         item = Item(list=mylist, text="")
         with self.assertRaises(ValidationError):
             item.full_clean()
+
+    def test_get_absolute_url(self):
+        mylist = List.objects.create()
+        self.assertEqual(mylist.get_absolute_url(), f"/lists/{mylist.id}/")
