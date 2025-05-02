@@ -5,7 +5,7 @@ from django.urls import reverse
 
 # Create your models here.
 class List(models.Model):
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("view_list", args=[self.id])
 
 
@@ -17,5 +17,5 @@ class Item(models.Model):
         ordering = ("id",)
         unique_together = ("list", "text")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.text

@@ -1,4 +1,5 @@
-from django.test import TestCase
+from django.http import HttpResponse
+from django.test import Client, TestCase
 from lists.models import Item, List
 from django.utils.html import escape
 from lists.forms import (
@@ -9,25 +10,12 @@ from lists.forms import (
 )
 from unittest import skip
 
-# Create your tests here.
-
 
 class HomePageTest(TestCase):
+
     def test_uses_home_template(self):
         response = self.client.get("/")
-        # self.assertContains(response, "<title>To-Do lists</title>")
-        # self.assertContains(response, "<html>")
-        # self.assertContains(response, "</html>")
-
-        # refactoring
         self.assertTemplateUsed(response, "home.html")
-
-    # def test_displays_all_list_items(self):
-    # Item.objects.create(text="itemey 1")
-    # Item.objects.create(text="itemey 2")
-    # response = self.client.get("/")
-    # self.assertContains(response, "itemey 1")
-    # self.assertContains(response, "itemey 2")
 
     def test_home_page_uses_item_form(self):
         response = self.client.get("/")
@@ -35,12 +23,20 @@ class HomePageTest(TestCase):
 
 
 class ListViewTest(TestCase):
-    def test_uses_list_template(self):
+
+    def post_invalid_input(self) -> HttpResponse:
+        mylist = List.objects.create()
+        return self.client.post(
+            f"/lists/{mylist.id}/",
+            data={"text": ""},
+        )
+
+    def test_uses_list_template(self) -> None:
         mylist = List.objects.create()
         response = self.client.get(f"/lists/{mylist.id}/")
         self.assertTemplateUsed(response, "list.html")
 
-    def test_displays_only_items_for_that_list(self):
+    def test_displays_only_items_for_that_list(self) -> None:
         correct_list = List.objects.create()
         Item.objects.create(text="itemey 1", list=correct_list)
         Item.objects.create(text="itemey 2", list=correct_list)
@@ -53,14 +49,14 @@ class ListViewTest(TestCase):
         self.assertContains(response, "itemey 2")
         self.assertNotContains(response, "other_list_item")
 
-    def test_passes_correct_list_to_template(self):
+    def test_passes_correct_list_to_template(self) -> None:
         other_list = List.objects.create()
         correct_list = List.objects.create()
         response = self.client.get(f"/lists/{correct_list.id}/")
 
         self.assertEqual(response.context["list"], correct_list)
 
-    def test_can_save_a_POST_request_to_an_existing_list(self):
+    def test_can_save_a_POST_request_to_an_existing_list(self) -> None:
         other_list = List.objects.create()
         correct_list = List.objects.create()
 
@@ -74,7 +70,7 @@ class ListViewTest(TestCase):
         self.assertEqual(new_item.text, "A new item for an existing list")
         self.assertEqual(new_item.list, correct_list)
 
-    def test_POST_redirects_to_list_view(self):
+    def test_POST_redirects_to_list_view(self) -> None:
         other_list = List.objects.create()
         correct_list = List.objects.create()
 
@@ -85,7 +81,7 @@ class ListViewTest(TestCase):
 
         self.assertRedirects(response, f"/lists/{correct_list.id}/")
 
-    def test_validation_errors_end_up_on_lists_page(self):
+    def test_validation_errors_end_up_on_lists_page(self) -> None:
         list_ = List.objects.create()
         response = self.client.post(f"/lists/{list_.id}/", data={"text": ""})
         self.assertEqual(response.status_code, 200)
@@ -93,20 +89,13 @@ class ListViewTest(TestCase):
         expected_error = escape("You can't have an empty list item")
         self.assertContains(response, expected_error)
 
-    def test_displays_item_form(self):
+    def test_displays_item_form(self) -> None:
         mylist = List.objects.create()
         response = self.client.get(f"/lists/{mylist.id}/")
         self.assertIsInstance(response.context["form"], ExistingListItemForm)
         self.assertContains(response, 'name="text"')
 
-    def post_invalid_input(self):
-        mylist = List.objects.create()
-        return self.client.post(
-            f"/lists/{mylist.id}/",
-            data={"text": ""},
-        )
-
-    def test_for_invalid_input_nothing_saved_to_db(self):
+    def test_for_invalid_input_nothing_saved_to_db(self) -> None:
         self.post_invalid_input()
         self.assertEqual(Item.objects.count(), 0)
 
@@ -138,18 +127,19 @@ class ListViewTest(TestCase):
 
 
 class NewListTest(TestCase):
-    def test_can_save_a_POST_request(self):
+
+    def test_can_save_a_POST_request(self) -> None:
         response = self.client.post("/lists/new", data={"text": "A new list item"})
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, "A new list item")
 
-    def test_redirects_after_POST(self):
+    def test_redirects_after_POST(self) -> None:
         response = self.client.post("/lists/new", data={"text": "A new list item"})
         new_list = List.objects.get()
         self.assertRedirects(response, f"/lists/{new_list.id}/")
 
-    def test_validation_errors_are_sent_back_to_home_page_template(self):
+    def test_validation_errors_are_sent_back_to_home_page_template(self) -> None:
         response = self.client.post("/lists/new", data={"text": ""})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "home.html")
@@ -157,12 +147,12 @@ class NewListTest(TestCase):
         expected_error = escape("You can't have an empty list item")
         self.assertContains(response, expected_error)
 
-    def test_invalid_list_items_arent_saved(self):
+    def test_invalid_list_items_arent_saved(self) -> None:
         self.client.post("/lists/new", data={"text": ""})
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_validation_errors_are_sent_back_to_home_page_template(self):
+    def test_validation_errors_show_correct_form(self) -> None:
         response = self.client.post("/lists/new", data={"text": ""})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "home.html")

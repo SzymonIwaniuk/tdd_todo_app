@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 from lists.models import Item
 from django.core.exceptions import ValidationError
@@ -21,7 +22,7 @@ class ItemForm(forms.models.ModelForm):
         }
         error_messages = {"text": {"required": EMPTY_ITEM_ERROR}}
 
-    def save(self, for_list):
+    def save(self, for_list: Any) -> Item:
         self.instance.list = for_list
         return super().save()
 
@@ -31,12 +32,12 @@ class ExistingListItemForm(ItemForm):
         super().__init__(*args, **kwargs)
         self.instance.list = for_list
 
-    def validate_unique(self):
+    def validate_unique(self) -> None:
         try:
             self.instance.validate_unique()
         except ValidationError as e:
             e.error_dict = {"text": [DUPLICATE_ITEM_ERROR]}
             self._update_errors(e)
 
-    def save(self):
+    def save(self) -> Item:
         return forms.models.ModelForm.save(self)
