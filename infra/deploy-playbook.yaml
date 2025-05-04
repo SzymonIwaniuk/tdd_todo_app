@@ -1,4 +1,4 @@
-- hosts: webservers
+- hosts: aws_ec2
   become: true
   tasks:
   - name: Install docker
@@ -49,16 +49,7 @@
       source: load
       force_source: true
       state: present
-
-  - name: Get ec2 public ip
-    ansible.builtin.shell: |
-      TOKEN=$(curl -sX PUT "http://169.254.169.254/latest/api/token" \
-        -H "X-aws-ec2-metadata-token-ttl-seconds: 60")
-      curl -sH "X-aws-ec2-metadata-token: $TOKEN" \
-        http://169.254.169.254/latest/meta-data/public-ipv4
-    register: ec2_public_ip
-    changed_when: false
-
+ 
   - name: Ensure .env file exists
     ansible.builtin.template:
       src: env.j2
@@ -66,7 +57,7 @@
       # Do not recreate file if it already exists.
       force: true
     vars:
-      host: "{{ ec2_public_ip.stdout }}"
+      host: "{{ public_ip }}"
       secret_key: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters') }}"
 
   - name: Ensure db.sqlite3 file exists outside container
