@@ -40,7 +40,9 @@
     <!--Put script loads at the end of HTML body-->
     <script src="/static/lists.js"></script>
     <script>
-      initialize("#id_text", ".invalid-feedback")
+      window.onload = () => {
+        initialize("#id_text");
+      };
     </script>
 </body>
 

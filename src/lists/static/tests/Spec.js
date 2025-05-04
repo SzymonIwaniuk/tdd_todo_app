@@ -42,7 +42,7 @@ describe("Superlists tests", () => {
   
   it("error message should be hidden on input", () => {
     console.log("in test 2");
-    initialize(inputSelector, errorSelector);
+    initialize(inputSelector);
     textInput.dispatchEvent(new InputEvent("input"));
 
     expect(errorMsg.checkVisibility()).toBe(false);
@@ -50,7 +50,7 @@ describe("Superlists tests", () => {
 
   it("error message should not be hidden before input is fired", () =>
 {
-    initialize(inputSelector, errorSelector);
+    initialize(inputSelector);
     expect(errorMsg.checkVisibility()).toBe(true);
   });
 
