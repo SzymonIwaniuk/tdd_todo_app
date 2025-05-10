@@ -47,6 +47,11 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
+AUTH_USER_MODEL = 'accounts.ListUser'
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.PasswordlessAuthenticationBackend',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -142,7 +147,7 @@ LOGGING = {
     },
 }
 
-EMAIL_HOST = "stmp.gmail.com"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "rimejk47@gmail.com"
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_PORT = 587
