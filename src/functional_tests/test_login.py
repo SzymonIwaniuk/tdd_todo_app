@@ -10,7 +10,7 @@ TEST_EMAIL = "user@example.com"
 SUBJECT = "Your login link for Superlists"
 
 
-class Login(FunctionalTest):
+class LoginTest(FunctionalTest):
     def test_login_using_magic_link(self) -> None:
         self.browser.get(self.live_server_url)
         self.browser.find_element(By.CSS_SELECTOR, "input[name=email]").send_keys(
