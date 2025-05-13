@@ -13,7 +13,7 @@
     <nav class="navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Superlists</a>
-        <form method="POST" actions="{% url 'send_login_email' %}">
+        <form method="POST" action="{% url 'send_login_email' %}">
           <div class="input-group">
             <label class="nabar-text me-2" for="id_email_input">
               Enter your email to log in
@@ -24,6 +24,20 @@
         </form>
       </div>
     </nav>
+
+    {% if messages %}
+    <div class="row">
+      <div class="col-md-8">
+        {% for message in messages %}
+        {% if message.level_tag == 'success' %}
+        <div class="alert alert-success">{{ message }}</div>
+        {% else %}
+        <div class="alert alert-warning">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
 
     <div class="row justify-content-center p-5 bg-body-tertiary rounded-3">
       <div class="col-lg-6 text-center">
