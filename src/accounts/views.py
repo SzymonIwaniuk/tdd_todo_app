@@ -1,9 +1,10 @@
 from django.core.mail import send_mail
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
-from django.contrib import messages
+from django.contrib import auth, messages
 from accounts.models import Token
 from django.urls import reverse
+
 
 def send_login_email(request: HttpRequest) -> HttpResponse:
     email = request.POST['email']
@@ -24,10 +25,16 @@ def send_login_email(request: HttpRequest) -> HttpResponse:
         request,
         "Check your email, we've sent you a link you can use to log in."
     ),
+
     return redirect("/")
 
 def login(request: HttpRequest) -> HttpResponse:
+    if user := auth.authenticate(uid=request.GET["token"]):
+        auth.login(request, user)
+
+    else:
+        messages.error(request, "Invalid login link, please request a new one")
+
     return redirect("/")
 
-
-
+    
