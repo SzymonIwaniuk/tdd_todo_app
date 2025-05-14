@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    container_name: superlists
+    # Please do note that if port 8888 is already in use, you can change the port to any other port or kill the process using the port
+    # sudo lsof -i:8888 , you take process PID and run:  kill -9 <PID> , killing is the better option than changing the port source code
+    ports:
+      - "8888:8888"
+    environment:
+      - DJANGO_SECRET_KEY=sekrit
+      - DJANGO_ALLOWED_HOST=localhost
+      - EMAIL_PASSWORD
+    volumes:
+      - ./src/db.sqlite3:/src/db.sqlite3
+
