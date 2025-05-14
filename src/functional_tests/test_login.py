@@ -10,7 +10,7 @@ TEST_EMAIL = "user@example.com"
 SUBJECT = "Your login link for Superlists"
 
 
-class LoginTest(FunctionalTest):
+class Login(FunctionalTest):
     def test_login_using_magic_link(self) -> None:
         self.browser.get(self.live_server_url)
         self.browser.find_element(By.CSS_SELECTOR, "input[name=email]").send_keys(
@@ -36,10 +36,25 @@ class LoginTest(FunctionalTest):
         url = url_search.group(0)
         self.assertIn(self.live_server_url, url)
         self.browser.get(url)
-
         self.wait_for(
             lambda: self.browser.find_element(By.CSS_SELECTOR, "#id_logout"),
         )
 
         navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
         self.assertIn(TEST_EMAIL, navbar.text)
+
+
+        self.wait_for(
+            lambda: self.browser.find_element(By.CSS_SELECTOR, "#id_logout"),
+        )
+        navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
+        self.assertIn(TEST_EMAIL, navbar.text)
+
+
+        self.browser.find_element(By.CSS_SELECTOR, "#id_logout").click()
+
+        self.wait_for(
+            lambda: self.browser.find_element(By.CSS_SELECTOR, "input[name=email]")
+        )
+        navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
+        self.assertNotIn(TEST_EMAIL, navbar.text)

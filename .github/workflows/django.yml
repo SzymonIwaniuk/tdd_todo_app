@@ -35,5 +35,5 @@ jobs:
 
     - name: Run Tests
       run: |
-        python src/manage.py test
+        python src/manage.py test src/
 
