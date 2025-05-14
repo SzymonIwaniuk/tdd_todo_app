@@ -35,5 +35,5 @@ jobs:
 
     - name: Run Tests
       run: |
-        python src/manage.py test src/ --exclude-tag=functional_tests
+        python src/manage.py test src/lists src/accounts
 
