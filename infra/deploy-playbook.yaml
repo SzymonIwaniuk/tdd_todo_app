@@ -42,6 +42,28 @@
       src: /tmp/superlists-img.tar
       dest: /tmp/superlists-img.tar
 
+  - name: Get current Docker containers and images
+    community.docker.docker_host_info:
+      containers: yes
+      images: yes
+    register: docker_info
+
+  - name: Remove all containers and their volumes
+    community.docker.docker_container:
+      name: "{{ item }}"
+      state: absent
+      keep_volumes: no
+    loop: "{{ docker_info.containers | map(attribute='Id') | list }}"
+    ignore_errors: yes
+
+  - name: Remove all Docker images
+    community.docker.docker_image:
+      name: "{{ item }}"
+      state: absent
+      force_absent: yes
+    loop: "{{ docker_info.images | map(attribute='Id') | list }}"
+    ignore_errors: yes
+
   - name: Import container image on server
     community.docker.docker_image:
       name: superlists
