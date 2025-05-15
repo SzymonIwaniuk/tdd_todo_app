@@ -4,7 +4,8 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile 
+      dockerfile: Dockerfile
+    image: superlists
     container_name: superlists
     # Please do note that if port 8888 is already in use, you can change the port to any other port or kill the process using the port
     # sudo lsof -i:8888 , you take process PID and run:  kill -9 <PID> , killing is the better option than changing the port source code
