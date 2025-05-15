@@ -4,22 +4,24 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.remote.webelement import WebElement
+
 
 MAX_WAIT = 5
 
 
 class FunctionalTest(StaticLiveServerTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.browser = webdriver.Firefox()
         test_server = os.environ.get("TEST_SERVER")
 
         if test_server:
             self.live_server_url = "http://" + test_server
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.browser.quit()
 
-    def wait_for_row_in_list_table(self, row_text):
+    def wait_for_row_in_list_table(self, row_text: str) -> None:
         start_time = time.time()
 
         while True:
@@ -46,5 +48,21 @@ class FunctionalTest(StaticLiveServerTestCase):
                     raise
                 time.sleep(0.5)
 
-    def get_item_input_box(self):
+    def get_item_input_box(self) -> WebElement:
         return self.browser.find_element(By.ID, "id_text")
+
+
+    def wait_to_be_logged_in(self, email: str) -> None:
+        self.wait_for(
+            lambda: self.browser.find_element(By.CSS_SELECTOR, "#id_logout"),
+        )
+        navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
+        self.assertIn(email, navbar.text)
+
+
+    def wait_to_be_logged_out(self, email: str) -> None:
+        self.wait_for(
+            lambda: self.browser.find_element(By.CSS_SELECTOR, "input[name=email]")
+        )
+        navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
+        self.assertNotIn(email, navbar.text)

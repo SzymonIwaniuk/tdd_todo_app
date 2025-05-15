@@ -29,6 +29,7 @@ def send_login_email(request: HttpRequest) -> HttpResponse:
     return redirect("/")
 
 def login(request: HttpRequest) -> HttpResponse:
+   
     if user := auth.authenticate(uid=request.GET["token"]):
         auth.login(request, user)
 

@@ -3,7 +3,7 @@ import re
 from django.core import mail
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-
+import time
 from .base import FunctionalTest
 
 TEST_EMAIL = "user@example.com"
@@ -58,3 +58,15 @@ class Login(FunctionalTest):
         )
         navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
         self.assertNotIn(TEST_EMAIL, navbar.text)
+
+
+        # user is logged in
+        #self.wait_to_be_logged_in(email=TEST_EMAIL)
+
+
+        # now he logs out
+        #self.browser.find_element(By.CSS_SELECTOR, '#id_logout').click()
+        
+
+        # he is logged out
+        #self.wait_to_be_logged_out(email=TEST_EMAIL)
