@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.remote.webelement import WebElement
 from collections.abc import Callable
+from .container_commands import reset_database
+
 
 MAX_WAIT = 5
 
@@ -13,10 +15,10 @@ MAX_WAIT = 5
 class FunctionalTest(StaticLiveServerTestCase):
     def setUp(self) -> None:
         self.browser = webdriver.Firefox()
-        test_server = os.environ.get("TEST_SERVER")
-
-        if test_server:
-            self.live_server_url = "http://" + test_server
+        self.test_server = os.environ.get("TEST_SERVER")
+        if self.test_server:
+            self.live_server_url = "http://" + self.test_server
+            reset_database(self.test_server)
 
     def tearDown(self) -> None:
         self.browser.quit()
@@ -44,10 +46,11 @@ class FunctionalTest(StaticLiveServerTestCase):
     def get_item_input_box(self) -> WebElement:
         return self.browser.find_element(By.ID, "id_text")
 
-
+    
+    #Still don't know why exactly this one doesnt working with CSS_SELECTOR, just use By.ID 
     @wait
     def wait_to_be_logged_in(self, email: str) -> None:
-        self.browser.find_element(By.CSS_SELECTOR, "#id_logout")
+        self.browser.find_element(By.ID, "id_logout")
         navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
         self.assertIn(email, navbar.text)
 
