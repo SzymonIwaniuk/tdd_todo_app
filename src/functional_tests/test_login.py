@@ -22,6 +22,9 @@ class Login(FunctionalTest):
                 self.browser.find_element(By.CSS_SELECTOR, "body").text,
             )
         )
+        
+        if self.test_server:
+            return
 
         email = mail.outbox.pop()
         self.assertIn(TEST_EMAIL, email.to)
@@ -58,14 +61,18 @@ class Login(FunctionalTest):
         navbar = self.browser.find_element(By.CSS_SELECTOR, ".navbar")
         self.assertNotIn(TEST_EMAIL, navbar.text)
 
+        
+        # user clicks it
+        self.browser.get(url)
 
-        # user is logged in
-        #self.wait_to_be_logged_in(email=TEST_EMAIL)
+
+        # user is logged in!
+        self.wait_to_be_logged_in(email=TEST_EMAIL)
 
 
         # now he logs out
-        #self.browser.find_element(By.CSS_SELECTOR, '#id_logout').click()
-        
+        self.browser.find_element(By.CSS_SELECTOR, "#id_logout").click()
+
 
         # he is logged out
-        #self.wait_to_be_logged_out(email=TEST_EMAIL)
+        self.wait_to_be_logged_out(email=TEST_EMAIL)
