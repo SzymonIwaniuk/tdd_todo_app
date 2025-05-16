@@ -41,7 +41,6 @@ describe("Superlists tests", () => {
   });
   
   it("error message should be hidden on input", () => {
-    console.log("in test 2");
     initialize(inputSelector);
     textInput.dispatchEvent(new InputEvent("input"));
 

@@ -1,0 +1,40 @@
+name: test-js
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: node:slim
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install firefox && geckodriver
+      run: |
+        # download firefox && wget
+        apt update -y && apt install -y firefox-esr wget
+        # download geckodriver
+        wget https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-linux64.tar.gz
+        # extract file
+        tar -xvzf geckodriver*
+        # make it executable
+        chmod +x geckodriver
+        # move so other tools can find it
+        mv geckodriver /usr/local/bin/
+        # for debug purposes
+        firefox --version
+        geckodriver --version
+
+    - name: Install npm and run js tests
+      run: |
+        cd src/lists/static
+        # not specify what npm install, because that's all in the package-lock.json
+        npm install
+        # run tests
+        npx jasmine-browser-runner runSpecs --config=tests/jasmine-browser-runner.config.mjs
