@@ -45,6 +45,6 @@ jobs:
         run: |
           pip install -r requirements.txt
           python src/manage.py test lists accounts
-          apt update -y && apt install -y firefox-esr
+          apt update -y && apt install -y firefox-esr firefox-geckodriver
           pip install selenium
           cd src && python manage.py test
