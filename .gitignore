@@ -10,3 +10,4 @@ src/static
 infra/inventory.ini
 *.pem
 .env
+src/functional_tests/screendumps

@@ -70,3 +70,11 @@ jobs:
         run: |
           pip install selenium
           cd src && python manage.py test
+
+      - name: upload screendumps
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screendumps
+          path: src/functional_tests/screendumps/
+      
