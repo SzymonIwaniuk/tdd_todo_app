@@ -48,6 +48,9 @@ jobs:
           # unit tests
           python src/manage.py test lists accounts
           # (if those pass) all tests, incl. functional.
-          apt update -y && apt install -y firefox-esr  
+          apt update -y && apt install -y firefox-esr
+          # for debug purposes
+          firefox --version
+          geckodriver --version
           pip install selenium
           cd src && python manage.py test
