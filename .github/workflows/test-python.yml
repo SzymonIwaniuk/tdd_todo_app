@@ -43,15 +43,30 @@ jobs:
           pip install virtualenv
           python -m virtualenv .venv
       # Main build
-      - name: Main build
+      - name: unit tests 
         run: |
           pip install -r requirements.txt
           # unit tests
           python src/manage.py test lists accounts
-          # (if those pass) all tests, incl. functional.
-          apt update -y && apt install -y firefox-esr
+        # (if those pass) all tests, incl. functional.
+        
+      - name: Install firefox && geckodriver
+        run: |
+          # download firefox && wget
+          apt update -y && apt install -y firefox-esr wget
+          # download geckodriver
+          wget https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-linux64.tar.gz
+          # extract file
+          tar -xvzf geckodriver*
+          # make it executable
+          chmod +x geckodriver
+          # move so other tools can find it
+          mv geckodriver /usr/local/bin/
           # for debug purposes
           firefox --version
           geckodriver --version
+          
+      - name: Install selenium && run FTs
+        run: |
           pip install selenium
           cd src && python manage.py test
