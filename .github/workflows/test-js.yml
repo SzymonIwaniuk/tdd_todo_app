@@ -11,6 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:slim
+
+    env:
+      #Make Firefox run headless
+      MOZ_HEADLESS: "1"
+      HOME: /root
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
