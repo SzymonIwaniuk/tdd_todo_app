@@ -17,6 +17,7 @@ jobs:
       PIP_CACHE_DIR: ${{ github.workspace }}/.cache/pip
       #Make Firefox run headless
       MOZ_HEADLESS: "1"
+      HOME: /root
       
     steps:
       - name: Checkout repository
