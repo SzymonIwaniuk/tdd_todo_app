@@ -15,7 +15,9 @@ jobs:
 # It lets us cache pip-installed packages
     env:
       PIP_CACHE_DIR: ${{ github.workspace }}/.cache/pip
-
+      #Make Firefox run headless
+      MOZ_HEADLESS: "1"
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
