@@ -49,6 +49,13 @@ jobs:
           # unit tests
           python src/manage.py test lists accounts
           # (if those pass) all tests, incl. functional.
-          apt update -y && apt install -y firefox-esr  
+          # Install firefox and geckodriver
+          apt update -y && apt install -y firefox-esr
+          GECKO_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
+          curl -L "https://github.com/mozilla/geckodriver/releases/download/${GECKO_VERSION}/geckodriver-${GECKO_VERSION}-linux64.tar.gz" -o geckodriver.tar.gz
+          tar -xzf geckodriver.tar.gz -C /usr/local/bin
+          chmod +x /usr/local/bin/geckodriver
+          # for debuging purposes
+          geckodriver --version
           pip install selenium
           cd src && python manage.py test
